@@ -21,6 +21,8 @@
 
 A CORS middleware for @chubbyts/chubbyts-http-types.
 
+*Apply toLowerCase() to each related request header name before pass the request to this middleware.*
+
 ## Requirements
 
  * node: 14
@@ -30,7 +32,7 @@ A CORS middleware for @chubbyts/chubbyts-http-types.
 Through [NPM](https://www.npmjs.com) as [@chubbyts/chubbyts-cors][1].
 
 ```ts
-npm i @chubbyts/chubbyts-cors@^1.0.0
+npm i @chubbyts/chubbyts-cors@^1.0.1
 ```
 
 ## Usage

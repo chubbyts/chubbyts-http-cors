@@ -202,11 +202,11 @@ test('preflight with origin, with method, with headers minimal', async () => {
     ...response,
     headers: {
       ...response.headers,
-      'Access-Control-Allow-Origin': ['https://mydomain.tld'],
-      'Access-Control-Allow-Credentials': ['false'],
-      'Access-Control-Allow-Methods': ['GET', 'POST'],
-      'Access-Control-Allow-Headers': ['Accept', 'Content-Type'],
-      'Access-Control-Max-Age': ['600'],
+      'access-control-allow-origin': ['https://mydomain.tld'],
+      'access-control-allow-credentials': ['false'],
+      'access-control-allow-methods': ['GET', 'POST'],
+      'access-control-allow-headers': ['Accept', 'Content-Type'],
+      'access-control-max-age': ['600'],
     },
   });
 
@@ -261,12 +261,12 @@ test('preflight with origin, with method, with headers maximal', async () => {
     ...response,
     headers: {
       ...response.headers,
-      'Access-Control-Allow-Origin': ['https://mydomain.tld'],
-      'Access-Control-Allow-Credentials': ['true'],
-      'Access-Control-Allow-Methods': ['GET', 'POST'],
-      'Access-Control-Allow-Headers': ['Accept', 'Content-Type'],
-      'Access-Control-Expose-Headers': ['X-Unknown'],
-      'Access-Control-Max-Age': ['7200'],
+      'access-control-allow-origin': ['https://mydomain.tld'],
+      'access-control-allow-credentials': ['true'],
+      'access-control-allow-methods': ['GET', 'POST'],
+      'access-control-allow-headers': ['Accept', 'Content-Type'],
+      'access-control-expose-headers': ['X-Unknown'],
+      'access-control-max-age': ['7200'],
     },
   });
 
@@ -360,9 +360,9 @@ test('handle with origin', async () => {
     ...response,
     headers: {
       ...response.headers,
-      'Access-Control-Allow-Origin': ['https://mydomain.tld'],
-      'Access-Control-Allow-Credentials': ['true'],
-      'Access-Control-Expose-Headers': ['X-Unknown'],
+      'access-control-allow-origin': ['https://mydomain.tld'],
+      'access-control-allow-credentials': ['true'],
+      'access-control-expose-headers': ['X-Unknown'],
     },
   });
 

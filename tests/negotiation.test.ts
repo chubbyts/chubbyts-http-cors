@@ -51,7 +51,7 @@ describe('createOriginNegotiator', () => {
   });
 
   test('match', async () => {
-    const request = { headers: { Origin: ['https://mydomain.tld'] } } as unknown as ServerRequest;
+    const request = { headers: { origin: ['https://mydomain.tld'] } } as unknown as ServerRequest;
 
     const allowOrigin1: AllowOrigin = jest.fn((origin: string) => {
       expect(origin).toBe('https://mydomain.tld');
@@ -72,7 +72,7 @@ describe('createOriginNegotiator', () => {
   });
 
   test('not match', async () => {
-    const request = { headers: { Origin: ['https://mydomain.tld'] } } as unknown as ServerRequest;
+    const request = { headers: { origin: ['https://mydomain.tld'] } } as unknown as ServerRequest;
 
     const allowOrigin1: AllowOrigin = jest.fn((origin: string) => {
       expect(origin).toBe('https://mydomain.tld');
@@ -103,7 +103,7 @@ describe('createMethodNegotiator', () => {
   });
 
   test('with allowed method', () => {
-    const request = { headers: { 'Access-Control-Request-Method': ['post'] } } as unknown as ServerRequest;
+    const request = { headers: { 'access-control-request-method': ['post'] } } as unknown as ServerRequest;
 
     const methodNegotiator = createMethodNegotiator([Method.GET, Method.POST]);
 
@@ -111,7 +111,7 @@ describe('createMethodNegotiator', () => {
   });
 
   test('with not allowed method', () => {
-    const request = { headers: { 'Access-Control-Request-Method': ['put'] } } as unknown as ServerRequest;
+    const request = { headers: { 'access-control-request-method': ['put'] } } as unknown as ServerRequest;
 
     const methodNegotiator = createMethodNegotiator([Method.GET, Method.POST]);
 
@@ -138,7 +138,7 @@ describe('createHeadersNegotiator', () => {
 
   test('with same headers', () => {
     const request = {
-      headers: { 'Access-Control-Request-Headers': ['Authorization', 'Content-Type', 'Accept'] },
+      headers: { 'access-control-request-headers': ['Authorization', 'Content-Type', 'Accept'] },
     } as unknown as ServerRequest;
 
     const headersNegotiator = createHeadersNegotiator(['Authorization', 'Accept', 'Content-Type']);
@@ -148,7 +148,7 @@ describe('createHeadersNegotiator', () => {
 
   test('with same headers lower case', () => {
     const request = {
-      headers: { 'Access-Control-Request-Headers': ['authorization', 'content-Type', 'accept'] },
+      headers: { 'access-control-request-headers': ['authorization', 'content-Type', 'accept'] },
     } as unknown as ServerRequest;
 
     const headersNegotiator = createHeadersNegotiator(['Authorization', 'Accept', 'Content-Type']);
@@ -157,7 +157,7 @@ describe('createHeadersNegotiator', () => {
   });
 
   test('with less headers', () => {
-    const request = { headers: { 'Access-Control-Request-Headers': ['Authorization'] } } as unknown as ServerRequest;
+    const request = { headers: { 'access-control-request-headers': ['Authorization'] } } as unknown as ServerRequest;
 
     const headersNegotiator = createHeadersNegotiator(['Authorization', 'Accept', 'Content-Type']);
 
@@ -166,7 +166,7 @@ describe('createHeadersNegotiator', () => {
 
   test('with to many headers', () => {
     const request = {
-      headers: { 'Access-Control-Request-Headers': ['Authorization', 'Accept', 'Content-Type'] },
+      headers: { 'access-control-request-headers': ['Authorization', 'Accept', 'Content-Type'] },
     } as unknown as ServerRequest;
 
     const headersNegotiator = createHeadersNegotiator(['Authorization', 'Content-Type']);

@@ -15,14 +15,14 @@ const responseMiddlewarePipeline = (middlewares: Array<ResponseMiddleware>): Res
 const addAllowOrigin = (allowOrigin: string): ResponseMiddleware => {
   return (response: Response): Response => ({
     ...response,
-    headers: { ...response.headers, 'Access-Control-Allow-Origin': [allowOrigin] },
+    headers: { ...response.headers, 'access-control-allow-origin': [allowOrigin] },
   });
 };
 
 const addAllowMethod = (allowedMethods: Array<string>): ResponseMiddleware => {
   return (response: Response): Response => ({
     ...response,
-    headers: { ...response.headers, 'Access-Control-Allow-Methods': allowedMethods },
+    headers: { ...response.headers, 'access-control-allow-methods': allowedMethods },
   });
 };
 
@@ -32,28 +32,28 @@ const addExposeHeaders = (exposeHeaders: Array<string>): ResponseMiddleware => {
       return response;
     }
 
-    return { ...response, headers: { ...response.headers, 'Access-Control-Expose-Headers': exposeHeaders } };
+    return { ...response, headers: { ...response.headers, 'access-control-expose-headers': exposeHeaders } };
   };
 };
 
 const addAllowCredentials = (allowCredentials: boolean): ResponseMiddleware => {
   return (response: Response): Response => ({
     ...response,
-    headers: { ...response.headers, 'Access-Control-Allow-Credentials': [allowCredentials ? 'true' : 'false'] },
+    headers: { ...response.headers, 'access-control-allow-credentials': [allowCredentials ? 'true' : 'false'] },
   });
 };
 
 const addAllowHeaders = (allowHeaders: Array<string>): ResponseMiddleware => {
   return (response: Response): Response => ({
     ...response,
-    headers: { ...response.headers, 'Access-Control-Allow-Headers': allowHeaders },
+    headers: { ...response.headers, 'access-control-allow-headers': allowHeaders },
   });
 };
 
 const addMaxAge = (maxAge: number): ResponseMiddleware => {
   return (response: Response): Response => ({
     ...response,
-    headers: { ...response.headers, 'Access-Control-Max-Age': [maxAge.toString()] },
+    headers: { ...response.headers, 'access-control-max-age': [maxAge.toString()] },
   });
 };
 

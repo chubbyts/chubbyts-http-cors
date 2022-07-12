@@ -18,7 +18,7 @@ export type OriginNegotiator = (request: ServerRequest) => string | undefined;
 
 export const createOriginNegotiator = (allowOrigins: Array<AllowOrigin>): OriginNegotiator => {
   return (request: ServerRequest): string | undefined => {
-    const origin = request.headers['Origin'] ? request.headers['Origin'][0] : undefined;
+    const origin = request.headers['origin'] ? request.headers['origin'][0] : undefined;
 
     if (!origin) {
       return undefined;
@@ -42,8 +42,8 @@ export type MethodNegotiator = {
 export const createMethodNegotiator = (allowMethods: Array<Method>): MethodNegotiator => {
   return {
     negotiate: (request: ServerRequest): boolean => {
-      const accessControlRequestMethod = request.headers['Access-Control-Request-Method']
-        ? request.headers['Access-Control-Request-Method'][0]
+      const accessControlRequestMethod = request.headers['access-control-request-method']
+        ? request.headers['access-control-request-method'][0]
         : undefined;
 
       if (!accessControlRequestMethod) {
@@ -64,8 +64,8 @@ export type HeadersNegotiator = {
 export const createHeadersNegotiator = (allowHeaders: Array<string>): HeadersNegotiator => {
   return {
     negotiate: (request: ServerRequest): boolean => {
-      const accessControlRequestHeaders = request.headers['Access-Control-Request-Headers']
-        ? request.headers['Access-Control-Request-Headers']
+      const accessControlRequestHeaders = request.headers['access-control-request-headers']
+        ? request.headers['access-control-request-headers']
         : undefined;
 
       if (!accessControlRequestHeaders) {
