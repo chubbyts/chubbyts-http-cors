@@ -32,7 +32,7 @@ A CORS middleware for @chubbyts/chubbyts-http-types.
 Through [NPM](https://www.npmjs.com) as [@chubbyts/chubbyts-cors][1].
 
 ```ts
-npm i @chubbyts/chubbyts-cors@^1.0.1
+npm i @chubbyts/chubbyts-cors@^1.0.2
 ```
 
 ## Usage

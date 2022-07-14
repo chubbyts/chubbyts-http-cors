@@ -70,17 +70,15 @@ const handlePreflight = (
   const response = responseFactory(204);
 
   const allowOrigin = originNegotiator(request);
-  const allowMethod = methodNegotiator.negotiate(request);
-  const allowNegotiator = headersNegotiator.negotiate(request);
 
-  if (!allowOrigin || !allowMethod || !allowNegotiator) {
+  if (!allowOrigin) {
     return response;
   }
 
   return responseMiddlewarePipeline([
     addAllowOrigin(allowOrigin),
-    addAllowMethod(methodNegotiator.allowMethods),
-    addAllowHeaders(headersNegotiator.allowHeaders),
+    ...(methodNegotiator.negotiate(request) ? [addAllowMethod(methodNegotiator.allowMethods)] : []),
+    ...(headersNegotiator.negotiate(request) ? [addAllowHeaders(headersNegotiator.allowHeaders)] : []),
     addAllowCredentials(allowCredentials),
     addExposeHeaders(exposeHeaders),
     addMaxAge(maxAge),
