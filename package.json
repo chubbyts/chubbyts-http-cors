@@ -1,6 +1,6 @@
 {
   "name": "@chubbyts/chubbyts-cors",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "A CORS middleware for @chubbyts/chubbyts-http-types.",
   "keywords": [],
   "author": "Dominik Zogg",

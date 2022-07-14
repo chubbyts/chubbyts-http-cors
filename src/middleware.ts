@@ -68,6 +68,7 @@ const handlePreflight = (
   maxAge: number,
 ) => {
   const response = responseFactory(204);
+  response.body.end();
 
   const allowOrigin = originNegotiator(request);
 

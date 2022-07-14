@@ -5,7 +5,9 @@ import { createCorsMiddleware } from '../src/middleware';
 test('preflight without origin', async () => {
   const request = { method: Method.OPTIONS } as ServerRequest;
 
-  const response = {} as Response;
+  const end = jest.fn();
+
+  const response = { body: { end } } as unknown as Response;
 
   const handler = jest.fn();
 
@@ -36,6 +38,7 @@ test('preflight without origin', async () => {
 
   expect(await middleware(request, handler)).toBe(response);
 
+  expect(end).toHaveBeenCalledTimes(1);
   expect(handler).toHaveBeenCalledTimes(0);
   expect(responseFactory).toHaveBeenCalledTimes(1);
   expect(originNegotiator).toHaveBeenCalledTimes(1);
@@ -46,7 +49,9 @@ test('preflight without origin', async () => {
 test('preflight with origin, without method, without headers', async () => {
   const request = { method: Method.OPTIONS } as ServerRequest;
 
-  const response = {} as Response;
+  const end = jest.fn();
+
+  const response = { body: { end } } as unknown as Response;
 
   const handler = jest.fn();
 
@@ -85,6 +90,7 @@ test('preflight with origin, without method, without headers', async () => {
     },
   });
 
+  expect(end).toHaveBeenCalledTimes(1);
   expect(handler).toHaveBeenCalledTimes(0);
   expect(responseFactory).toHaveBeenCalledTimes(1);
   expect(originNegotiator).toHaveBeenCalledTimes(1);
@@ -95,7 +101,9 @@ test('preflight with origin, without method, without headers', async () => {
 test('preflight with origin, with method, with headers, minimal', async () => {
   const request = { method: Method.OPTIONS } as ServerRequest;
 
-  const response = {} as Response;
+  const end = jest.fn();
+
+  const response = { body: { end } } as unknown as Response;
 
   const handler = jest.fn();
 
@@ -136,6 +144,7 @@ test('preflight with origin, with method, with headers, minimal', async () => {
     },
   });
 
+  expect(end).toHaveBeenCalledTimes(1);
   expect(handler).toHaveBeenCalledTimes(0);
   expect(responseFactory).toHaveBeenCalledTimes(1);
   expect(originNegotiator).toHaveBeenCalledTimes(1);
@@ -146,7 +155,9 @@ test('preflight with origin, with method, with headers, minimal', async () => {
 test('preflight with origin, with method, with headers, maximal', async () => {
   const request = { method: Method.OPTIONS } as ServerRequest;
 
-  const response = {} as Response;
+  const end = jest.fn();
+
+  const response = { body: { end } } as unknown as Response;
 
   const handler = jest.fn();
 
@@ -196,6 +207,7 @@ test('preflight with origin, with method, with headers, maximal', async () => {
     },
   });
 
+  expect(end).toHaveBeenCalledTimes(1);
   expect(handler).toHaveBeenCalledTimes(0);
   expect(responseFactory).toHaveBeenCalledTimes(1);
   expect(originNegotiator).toHaveBeenCalledTimes(1);
