@@ -1,7 +1,9 @@
-import { Method, ServerRequest } from '@chubbyts/chubbyts-http-types/dist/message';
+import type { ServerRequest } from '@chubbyts/chubbyts-http-types/dist/message';
+import { Method } from '@chubbyts/chubbyts-http-types/dist/message';
 import { describe, expect, test } from '@jest/globals';
+import { useFunctionMock } from '@chubbyts/chubbyts-function-mock/dist/function-mock';
+import type { AllowOrigin } from '../src/negotiation';
 import {
-  AllowOrigin,
   createAllowOriginExact,
   createAllowOriginRegex,
   createHeadersNegotiator,
@@ -25,13 +27,13 @@ describe('createAllowOriginExact', () => {
 
 describe('createAllowOriginRegex', () => {
   test('match', async () => {
-    const allowOriginRegex = createAllowOriginRegex(/^https\:\/\/my/);
+    const allowOriginRegex = createAllowOriginRegex(/^https:\/\/my/);
 
     expect(allowOriginRegex('https://mydomain.tld')).toBe(true);
   });
 
   test('not match', async () => {
-    const allowOriginRegex = createAllowOriginRegex(/^http\:\/\/my/);
+    const allowOriginRegex = createAllowOriginRegex(/^http:\/\/my/);
 
     expect(allowOriginRegex('https://mydomain.tld')).toBe(false);
   });
@@ -41,55 +43,47 @@ describe('createOriginNegotiator', () => {
   test('missing origin header', async () => {
     const request = { headers: {} } as ServerRequest;
 
-    const allowOrigin: AllowOrigin = jest.fn();
+    const [allowOrigin, allowOriginMocks] = useFunctionMock<AllowOrigin>([]);
 
     const originNegotiator = createOriginNegotiator([allowOrigin]);
 
     expect(originNegotiator(request)).toBe(undefined);
 
-    expect(allowOrigin).toHaveBeenCalledTimes(0);
+    expect(allowOriginMocks.length).toBe(0);
   });
 
   test('match', async () => {
-    const request = { headers: { origin: ['https://mydomain.tld'] } } as unknown as ServerRequest;
+    const origin = 'https://mydomain.tld';
 
-    const allowOrigin1: AllowOrigin = jest.fn((origin: string) => {
-      expect(origin).toBe('https://mydomain.tld');
-      return false;
-    });
+    const request = { headers: { origin: [origin] } } as unknown as ServerRequest;
 
-    const allowOrigin2: AllowOrigin = jest.fn((origin: string) => {
-      expect(origin).toBe('https://mydomain.tld');
-      return true;
-    });
+    const [allowOrigin1, allowOrigin1Mocks] = useFunctionMock<AllowOrigin>([{ parameters: [origin], return: false }]);
+
+    const [allowOrigin2, allowOrigin2Mocks] = useFunctionMock<AllowOrigin>([{ parameters: [origin], return: true }]);
 
     const originNegotiator = createOriginNegotiator([allowOrigin1, allowOrigin2]);
 
     expect(originNegotiator(request)).toBe('https://mydomain.tld');
 
-    expect(allowOrigin1).toHaveBeenCalledTimes(1);
-    expect(allowOrigin2).toHaveBeenCalledTimes(1);
+    expect(allowOrigin1Mocks.length).toBe(0);
+    expect(allowOrigin2Mocks.length).toBe(0);
   });
 
   test('not match', async () => {
-    const request = { headers: { origin: ['https://mydomain.tld'] } } as unknown as ServerRequest;
+    const origin = 'https://mydomain.tld';
 
-    const allowOrigin1: AllowOrigin = jest.fn((origin: string) => {
-      expect(origin).toBe('https://mydomain.tld');
-      return false;
-    });
+    const request = { headers: { origin: [origin] } } as unknown as ServerRequest;
 
-    const allowOrigin2: AllowOrigin = jest.fn((origin: string) => {
-      expect(origin).toBe('https://mydomain.tld');
-      return false;
-    });
+    const [allowOrigin1, allowOrigin1Mocks] = useFunctionMock<AllowOrigin>([{ parameters: [origin], return: false }]);
+
+    const [allowOrigin2, allowOrigin2Mocks] = useFunctionMock<AllowOrigin>([{ parameters: [origin], return: false }]);
 
     const originNegotiator = createOriginNegotiator([allowOrigin1, allowOrigin2]);
 
     expect(originNegotiator(request)).toBe(undefined);
 
-    expect(allowOrigin1).toHaveBeenCalledTimes(1);
-    expect(allowOrigin2).toHaveBeenCalledTimes(1);
+    expect(allowOrigin1Mocks.length).toBe(0);
+    expect(allowOrigin2Mocks.length).toBe(0);
   });
 });
 

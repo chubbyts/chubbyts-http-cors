@@ -1,8 +1,9 @@
-import { Handler } from '@chubbyts/chubbyts-http-types/dist/handler';
-import { Method, Response, ServerRequest } from '@chubbyts/chubbyts-http-types/dist/message';
-import { Middleware } from '@chubbyts/chubbyts-http-types/dist/middleware';
-import { ResponseFactory } from '@chubbyts/chubbyts-http-types/dist/message-factory';
-import { HeadersNegotiator, MethodNegotiator, OriginNegotiator } from './negotiation';
+import type { Handler } from '@chubbyts/chubbyts-http-types/dist/handler';
+import type { Response, ServerRequest } from '@chubbyts/chubbyts-http-types/dist/message';
+import { Method } from '@chubbyts/chubbyts-http-types/dist/message';
+import type { Middleware } from '@chubbyts/chubbyts-http-types/dist/middleware';
+import type { ResponseFactory } from '@chubbyts/chubbyts-http-types/dist/message-factory';
+import type { HeadersNegotiator, MethodNegotiator, OriginNegotiator } from './negotiation';
 
 const isPreflight = (request: ServerRequest) => request.method.toUpperCase() === Method.OPTIONS;
 
@@ -114,8 +115,8 @@ export const createCorsMiddleware = (
   methodNegotiator: MethodNegotiator,
   headersNegotiator: HeadersNegotiator,
   exposeHeaders: Array<string> = [],
-  allowCredentials: boolean = false,
-  maxAge: number = 600,
+  allowCredentials = false,
+  maxAge = 600,
 ): Middleware => {
   return async (request: ServerRequest, handler: Handler): Promise<Response> => {
     if (isPreflight(request)) {

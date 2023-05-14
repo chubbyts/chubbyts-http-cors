@@ -1,5 +1,11 @@
-import { Method, Response, ServerRequest } from '@chubbyts/chubbyts-http-types/dist/message';
+import type { Response, ServerRequest } from '@chubbyts/chubbyts-http-types/dist/message';
+import { Method } from '@chubbyts/chubbyts-http-types/dist/message';
 import { expect, test } from '@jest/globals';
+import { useFunctionMock } from '@chubbyts/chubbyts-function-mock/dist/function-mock';
+import { useObjectMock } from '@chubbyts/chubbyts-function-mock/dist/object-mock';
+import type { ResponseFactory } from '@chubbyts/chubbyts-http-types/dist/message-factory';
+import type { Handler } from '@chubbyts/chubbyts-http-types/dist/handler';
+import type { HeadersNegotiator, MethodNegotiator, OriginNegotiator } from '../src/negotiation';
 import { createCorsMiddleware } from '../src/middleware';
 
 test('preflight without origin', async () => {
@@ -9,41 +15,31 @@ test('preflight without origin', async () => {
 
   const response = { body: { end } } as unknown as Response;
 
-  const handler = jest.fn();
+  const [handler, handlerMocks] = useFunctionMock<Handler>([]);
 
-  const responseFactory = jest.fn((status: number, reasonPhrase?: string) => {
-    expect(status).toBe(204);
-    expect(reasonPhrase).toBe(undefined);
+  const [responseFactory, responseFactoryMocks] = useFunctionMock<ResponseFactory>([
+    { parameters: [204], return: response },
+  ]);
 
-    return response;
-  });
+  const [originNegotiator, originNegotiatorMocks] = useFunctionMock<OriginNegotiator>([
+    { parameters: [request], return: undefined },
+  ]);
 
-  const originNegotiator = jest.fn((request: ServerRequest) => undefined);
+  const [methodNegotiator, methodNegotiatorMocks] = useObjectMock<MethodNegotiator>([]);
 
-  const negotiateMethod = jest.fn();
-
-  const methodNegotiator = {
-    negotiate: negotiateMethod,
-    allowMethods: [],
-  };
-
-  const negotiateHeaders = jest.fn();
-
-  const headersNegotiator = {
-    negotiate: negotiateHeaders,
-    allowHeaders: [],
-  };
+  const [headersNegotiator, headersNegotiatorMocks] = useObjectMock<HeadersNegotiator>([]);
 
   const middleware = createCorsMiddleware(responseFactory, originNegotiator, methodNegotiator, headersNegotiator);
 
   expect(await middleware(request, handler)).toBe(response);
 
   expect(end).toHaveBeenCalledTimes(1);
-  expect(handler).toHaveBeenCalledTimes(0);
-  expect(responseFactory).toHaveBeenCalledTimes(1);
-  expect(originNegotiator).toHaveBeenCalledTimes(1);
-  expect(negotiateMethod).toHaveBeenCalledTimes(0);
-  expect(negotiateHeaders).toHaveBeenCalledTimes(0);
+
+  expect(handlerMocks.length).toBe(0);
+  expect(responseFactoryMocks.length).toBe(0);
+  expect(originNegotiatorMocks.length).toBe(0);
+  expect(methodNegotiatorMocks.length).toBe(0);
+  expect(headersNegotiatorMocks.length).toBe(0);
 });
 
 test('preflight with origin, without method, without headers', async () => {
@@ -53,30 +49,23 @@ test('preflight with origin, without method, without headers', async () => {
 
   const response = { body: { end } } as unknown as Response;
 
-  const handler = jest.fn();
+  const [handler, handlerMocks] = useFunctionMock<Handler>([]);
 
-  const responseFactory = jest.fn((status: number, reasonPhrase?: string) => {
-    expect(status).toBe(204);
-    expect(reasonPhrase).toBe(undefined);
+  const [responseFactory, responseFactoryMocks] = useFunctionMock<ResponseFactory>([
+    { parameters: [204], return: response },
+  ]);
 
-    return response;
-  });
+  const [originNegotiator, originNegotiatorMocks] = useFunctionMock<OriginNegotiator>([
+    { parameters: [request], return: 'https://mydomain.tld' },
+  ]);
 
-  const originNegotiator = jest.fn((request: ServerRequest) => 'https://mydomain.tld');
+  const [methodNegotiator, methodNegotiatorMocks] = useObjectMock<MethodNegotiator>([
+    { name: 'negotiate', parameters: [request], return: false },
+  ]);
 
-  const negotiateMethod = jest.fn((request: ServerRequest) => false);
-
-  const methodNegotiator = {
-    negotiate: negotiateMethod,
-    allowMethods: [Method.GET, Method.POST],
-  };
-
-  const negotiateHeaders = jest.fn((request: ServerRequest) => false);
-
-  const headersNegotiator = {
-    negotiate: negotiateHeaders,
-    allowHeaders: ['Accept', 'Content-Type'],
-  };
+  const [headersNegotiator, headersNegotiatorMocks] = useObjectMock<HeadersNegotiator>([
+    { name: 'negotiate', parameters: [request], return: false },
+  ]);
 
   const middleware = createCorsMiddleware(responseFactory, originNegotiator, methodNegotiator, headersNegotiator);
 
@@ -91,11 +80,12 @@ test('preflight with origin, without method, without headers', async () => {
   });
 
   expect(end).toHaveBeenCalledTimes(1);
-  expect(handler).toHaveBeenCalledTimes(0);
-  expect(responseFactory).toHaveBeenCalledTimes(1);
-  expect(originNegotiator).toHaveBeenCalledTimes(1);
-  expect(negotiateMethod).toHaveBeenCalledTimes(1);
-  expect(negotiateHeaders).toHaveBeenCalledTimes(1);
+
+  expect(handlerMocks.length).toBe(0);
+  expect(responseFactoryMocks.length).toBe(0);
+  expect(originNegotiatorMocks.length).toBe(0);
+  expect(methodNegotiatorMocks.length).toBe(0);
+  expect(headersNegotiatorMocks.length).toBe(0);
 });
 
 test('preflight with origin, with method, with headers, minimal', async () => {
@@ -105,30 +95,25 @@ test('preflight with origin, with method, with headers, minimal', async () => {
 
   const response = { body: { end } } as unknown as Response;
 
-  const handler = jest.fn();
+  const [handler, handlerMocks] = useFunctionMock<Handler>([]);
 
-  const responseFactory = jest.fn((status: number, reasonPhrase?: string) => {
-    expect(status).toBe(204);
-    expect(reasonPhrase).toBe(undefined);
+  const [responseFactory, responseFactoryMocks] = useFunctionMock<ResponseFactory>([
+    { parameters: [204], return: response },
+  ]);
 
-    return response;
-  });
+  const [originNegotiator, originNegotiatorMocks] = useFunctionMock<OriginNegotiator>([
+    { parameters: [request], return: 'https://mydomain.tld' },
+  ]);
 
-  const originNegotiator = jest.fn((request: ServerRequest) => 'https://mydomain.tld');
+  const [methodNegotiator, methodNegotiatorMocks] = useObjectMock<MethodNegotiator>([
+    { name: 'negotiate', parameters: [request], return: true },
+    { name: 'allowMethods', value: [Method.GET, Method.POST] },
+  ]);
 
-  const negotiateMethod = jest.fn((request: ServerRequest) => true);
-
-  const methodNegotiator = {
-    negotiate: negotiateMethod,
-    allowMethods: [Method.GET, Method.POST],
-  };
-
-  const negotiateHeaders = jest.fn((request: ServerRequest) => true);
-
-  const headersNegotiator = {
-    negotiate: negotiateHeaders,
-    allowHeaders: ['Accept', 'Content-Type'],
-  };
+  const [headersNegotiator, headersNegotiatorMocks] = useObjectMock<HeadersNegotiator>([
+    { name: 'negotiate', parameters: [request], return: true },
+    { name: 'allowHeaders', value: ['Accept', 'Content-Type'] },
+  ]);
 
   const middleware = createCorsMiddleware(responseFactory, originNegotiator, methodNegotiator, headersNegotiator);
 
@@ -145,11 +130,12 @@ test('preflight with origin, with method, with headers, minimal', async () => {
   });
 
   expect(end).toHaveBeenCalledTimes(1);
-  expect(handler).toHaveBeenCalledTimes(0);
-  expect(responseFactory).toHaveBeenCalledTimes(1);
-  expect(originNegotiator).toHaveBeenCalledTimes(1);
-  expect(negotiateMethod).toHaveBeenCalledTimes(1);
-  expect(negotiateHeaders).toHaveBeenCalledTimes(1);
+
+  expect(handlerMocks.length).toBe(0);
+  expect(responseFactoryMocks.length).toBe(0);
+  expect(originNegotiatorMocks.length).toBe(0);
+  expect(methodNegotiatorMocks.length).toBe(0);
+  expect(headersNegotiatorMocks.length).toBe(0);
 });
 
 test('preflight with origin, with method, with headers, maximal', async () => {
@@ -159,30 +145,25 @@ test('preflight with origin, with method, with headers, maximal', async () => {
 
   const response = { body: { end } } as unknown as Response;
 
-  const handler = jest.fn();
+  const [handler, handlerMocks] = useFunctionMock<Handler>([]);
 
-  const responseFactory = jest.fn((status: number, reasonPhrase?: string) => {
-    expect(status).toBe(204);
-    expect(reasonPhrase).toBe(undefined);
+  const [responseFactory, responseFactoryMocks] = useFunctionMock<ResponseFactory>([
+    { parameters: [204], return: response },
+  ]);
 
-    return response;
-  });
+  const [originNegotiator, originNegotiatorMocks] = useFunctionMock<OriginNegotiator>([
+    { parameters: [request], return: 'https://mydomain.tld' },
+  ]);
 
-  const originNegotiator = jest.fn((request: ServerRequest) => 'https://mydomain.tld');
+  const [methodNegotiator, methodNegotiatorMocks] = useObjectMock<MethodNegotiator>([
+    { name: 'negotiate', parameters: [request], return: true },
+    { name: 'allowMethods', value: [Method.GET, Method.POST] },
+  ]);
 
-  const negotiateMethod = jest.fn((request: ServerRequest) => true);
-
-  const methodNegotiator = {
-    negotiate: negotiateMethod,
-    allowMethods: [Method.GET, Method.POST],
-  };
-
-  const negotiateHeaders = jest.fn((request: ServerRequest) => true);
-
-  const headersNegotiator = {
-    negotiate: negotiateHeaders,
-    allowHeaders: ['Accept', 'Content-Type'],
-  };
+  const [headersNegotiator, headersNegotiatorMocks] = useObjectMock<HeadersNegotiator>([
+    { name: 'negotiate', parameters: [request], return: true },
+    { name: 'allowHeaders', value: ['Accept', 'Content-Type'] },
+  ]);
 
   const middleware = createCorsMiddleware(
     responseFactory,
@@ -208,11 +189,12 @@ test('preflight with origin, with method, with headers, maximal', async () => {
   });
 
   expect(end).toHaveBeenCalledTimes(1);
-  expect(handler).toHaveBeenCalledTimes(0);
-  expect(responseFactory).toHaveBeenCalledTimes(1);
-  expect(originNegotiator).toHaveBeenCalledTimes(1);
-  expect(negotiateMethod).toHaveBeenCalledTimes(1);
-  expect(negotiateHeaders).toHaveBeenCalledTimes(1);
+
+  expect(handlerMocks.length).toBe(0);
+  expect(responseFactoryMocks.length).toBe(0);
+  expect(originNegotiatorMocks.length).toBe(0);
+  expect(methodNegotiatorMocks.length).toBe(0);
+  expect(headersNegotiatorMocks.length).toBe(0);
 });
 
 test('handle without origin', async () => {
@@ -220,25 +202,19 @@ test('handle without origin', async () => {
 
   const response = {} as Response;
 
-  const handler = jest.fn(async (request: ServerRequest) => response);
+  const [handler, handlerMocks] = useFunctionMock<Handler>([
+    { parameters: [request], return: Promise.resolve(response) },
+  ]);
 
-  const responseFactory = jest.fn();
+  const [responseFactory, responseFactoryMocks] = useFunctionMock<ResponseFactory>([]);
 
-  const originNegotiator = jest.fn((request: ServerRequest) => undefined);
+  const [originNegotiator, originNegotiatorMocks] = useFunctionMock<OriginNegotiator>([
+    { parameters: [request], return: undefined },
+  ]);
 
-  const negotiateMethod = jest.fn();
+  const [methodNegotiator, methodNegotiatorMocks] = useObjectMock<MethodNegotiator>([]);
 
-  const methodNegotiator = {
-    negotiate: negotiateMethod,
-    allowMethods: [],
-  };
-
-  const negotiateHeaders = jest.fn();
-
-  const headersNegotiator = {
-    negotiate: negotiateHeaders,
-    allowHeaders: [],
-  };
+  const [headersNegotiator, headersNegotiatorMocks] = useObjectMock<HeadersNegotiator>([]);
 
   const middleware = createCorsMiddleware(
     responseFactory,
@@ -252,11 +228,11 @@ test('handle without origin', async () => {
 
   expect(await middleware(request, handler)).toBe(response);
 
-  expect(handler).toHaveBeenCalledTimes(1);
-  expect(responseFactory).toHaveBeenCalledTimes(0);
-  expect(originNegotiator).toHaveBeenCalledTimes(1);
-  expect(negotiateMethod).toHaveBeenCalledTimes(0);
-  expect(negotiateHeaders).toHaveBeenCalledTimes(0);
+  expect(handlerMocks.length).toBe(0);
+  expect(responseFactoryMocks.length).toBe(0);
+  expect(originNegotiatorMocks.length).toBe(0);
+  expect(methodNegotiatorMocks.length).toBe(0);
+  expect(headersNegotiatorMocks.length).toBe(0);
 });
 
 test('handle with origin', async () => {
@@ -264,25 +240,19 @@ test('handle with origin', async () => {
 
   const response = {} as Response;
 
-  const handler = jest.fn(async (request: ServerRequest) => response);
+  const [handler, handlerMocks] = useFunctionMock<Handler>([
+    { parameters: [request], return: Promise.resolve(response) },
+  ]);
 
-  const responseFactory = jest.fn();
+  const [responseFactory, responseFactoryMocks] = useFunctionMock<ResponseFactory>([]);
 
-  const originNegotiator = jest.fn((request: ServerRequest) => 'https://mydomain.tld');
+  const [originNegotiator, originNegotiatorMocks] = useFunctionMock<OriginNegotiator>([
+    { parameters: [request], return: 'https://mydomain.tld' },
+  ]);
 
-  const negotiateMethod = jest.fn();
+  const [methodNegotiator, methodNegotiatorMocks] = useObjectMock<MethodNegotiator>([]);
 
-  const methodNegotiator = {
-    negotiate: negotiateMethod,
-    allowMethods: [],
-  };
-
-  const negotiateHeaders = jest.fn();
-
-  const headersNegotiator = {
-    negotiate: negotiateHeaders,
-    allowHeaders: [],
-  };
+  const [headersNegotiator, headersNegotiatorMocks] = useObjectMock<HeadersNegotiator>([]);
 
   const middleware = createCorsMiddleware(
     responseFactory,
@@ -304,9 +274,9 @@ test('handle with origin', async () => {
     },
   });
 
-  expect(handler).toHaveBeenCalledTimes(1);
-  expect(responseFactory).toHaveBeenCalledTimes(0);
-  expect(originNegotiator).toHaveBeenCalledTimes(1);
-  expect(negotiateMethod).toHaveBeenCalledTimes(0);
-  expect(negotiateHeaders).toHaveBeenCalledTimes(0);
+  expect(handlerMocks.length).toBe(0);
+  expect(responseFactoryMocks.length).toBe(0);
+  expect(originNegotiatorMocks.length).toBe(0);
+  expect(methodNegotiatorMocks.length).toBe(0);
+  expect(headersNegotiatorMocks.length).toBe(0);
 });

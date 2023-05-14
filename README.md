@@ -25,14 +25,15 @@ A CORS middleware for @chubbyts/chubbyts-http-types.
 
 ## Requirements
 
- * node: 14
+ * node: 16
+ * [@chubbyts/chubbyts-http-types][2]: ^1.1.0
 
 ## Installation
 
 Through [NPM](https://www.npmjs.com) as [@chubbyts/chubbyts-cors][1].
 
 ```ts
-npm i @chubbyts/chubbyts-cors@^1.0.4
+npm i @chubbyts/chubbyts-cors@^1.1.0
 ```
 
 ## Usage
@@ -65,3 +66,4 @@ const corsMiddleware = createCorsMiddleware(
 2023 Dominik Zogg
 
 [1]: https://www.npmjs.com/package/@chubbyts/chubbyts-cors
+[2]: https://www.npmjs.com/package/@chubbyts/chubbyts-http-types

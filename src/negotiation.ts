@@ -1,4 +1,4 @@
-import { Method, ServerRequest } from '@chubbyts/chubbyts-http-types/dist/message';
+import type { Method, ServerRequest } from '@chubbyts/chubbyts-http-types/dist/message';
 
 export type AllowOrigin = (origin: string) => boolean;
 
