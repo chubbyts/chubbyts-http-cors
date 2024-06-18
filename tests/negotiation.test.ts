@@ -1,6 +1,6 @@
 import type { ServerRequest } from '@chubbyts/chubbyts-http-types/dist/message';
 import { Method } from '@chubbyts/chubbyts-http-types/dist/message';
-import { describe, expect, test } from '@jest/globals';
+import { describe, expect, test } from 'vitest';
 import { useFunctionMock } from '@chubbyts/chubbyts-function-mock/dist/function-mock';
 import type { AllowOrigin } from '../src/negotiation';
 import {

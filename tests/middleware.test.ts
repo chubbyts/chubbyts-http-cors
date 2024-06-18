@@ -1,6 +1,6 @@
 import type { Response, ServerRequest } from '@chubbyts/chubbyts-http-types/dist/message';
 import { Method } from '@chubbyts/chubbyts-http-types/dist/message';
-import { expect, test } from '@jest/globals';
+import { expect, test, vi } from 'vitest';
 import { useFunctionMock } from '@chubbyts/chubbyts-function-mock/dist/function-mock';
 import { useObjectMock } from '@chubbyts/chubbyts-function-mock/dist/object-mock';
 import type { ResponseFactory } from '@chubbyts/chubbyts-http-types/dist/message-factory';
@@ -11,7 +11,7 @@ import { createCorsMiddleware } from '../src/middleware';
 test('preflight without origin', async () => {
   const request = { method: Method.OPTIONS } as ServerRequest;
 
-  const end = jest.fn();
+  const end = vi.fn();
 
   const response = { body: { end } } as unknown as Response;
 
@@ -45,7 +45,7 @@ test('preflight without origin', async () => {
 test('preflight with origin, without method, without headers', async () => {
   const request = { method: Method.OPTIONS } as ServerRequest;
 
-  const end = jest.fn();
+  const end = vi.fn();
 
   const response = { body: { end } } as unknown as Response;
 
@@ -91,7 +91,7 @@ test('preflight with origin, without method, without headers', async () => {
 test('preflight with origin, with method, with headers, minimal', async () => {
   const request = { method: Method.OPTIONS } as ServerRequest;
 
-  const end = jest.fn();
+  const end = vi.fn();
 
   const response = { body: { end } } as unknown as Response;
 
@@ -141,7 +141,7 @@ test('preflight with origin, with method, with headers, minimal', async () => {
 test('preflight with origin, with method, with headers, maximal', async () => {
   const request = { method: Method.OPTIONS } as ServerRequest;
 
-  const end = jest.fn();
+  const end = vi.fn();
 
   const response = { body: { end } } as unknown as Response;
 
