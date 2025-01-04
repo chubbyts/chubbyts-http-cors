@@ -26,14 +26,14 @@ A CORS middleware for @chubbyts/chubbyts-http-types.
 ## Requirements
 
  * node: 18
- * [@chubbyts/chubbyts-http-types][2]: ^1.3.0
+ * [@chubbyts/chubbyts-http-types][2]: ^1.3.1
 
 ## Installation
 
 Through [NPM](https://www.npmjs.com) as [@chubbyts/chubbyts-http-cors][1].
 
 ```ts
-npm i @chubbyts/chubbyts-http-cors@^1.3.0
+npm i @chubbyts/chubbyts-http-cors@^1.3.1
 ```
 
 ## Usage
