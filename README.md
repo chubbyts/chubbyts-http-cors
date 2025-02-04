@@ -26,14 +26,14 @@ A CORS middleware for @chubbyts/chubbyts-http-types.
 ## Requirements
 
  * node: 18
- * [@chubbyts/chubbyts-http-types][2]: ^1.3.1
+ * [@chubbyts/chubbyts-http-types][2]: ^1.3.1 || ^2.0.0
 
 ## Installation
 
 Through [NPM](https://www.npmjs.com) as [@chubbyts/chubbyts-http-cors][1].
 
 ```ts
-npm i @chubbyts/chubbyts-http-cors@^1.3.1
+npm i @chubbyts/chubbyts-http-cors@^1.4.0
 ```
 
 ## Usage
@@ -52,7 +52,7 @@ import { Method } from '@chubbyts/chubbyts-http-types/dist/message';
 const corsMiddleware = createCorsMiddleware(
   createResponseFactory(),
   createOriginNegotiator([createAllowOriginRegex(/^https?\:\/\/localhost(\:\d+)?$/)]),
-  createMethodNegotiator([Method.GET, Method.POST, Method.PUT, Method.DELETE]),
+  createMethodNegotiator(['GET', 'POST', 'PUT', 'DELETE']),
   createHeadersNegotiator(['Content-Type', 'Accept']),
 );
 

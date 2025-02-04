@@ -1,5 +1,4 @@
 import type { ServerRequest } from '@chubbyts/chubbyts-http-types/dist/message';
-import { Method } from '@chubbyts/chubbyts-http-types/dist/message';
 import { describe, expect, test } from 'vitest';
 import { useFunctionMock } from '@chubbyts/chubbyts-function-mock/dist/function-mock';
 import type { AllowOrigin } from '../src/negotiation';
@@ -91,7 +90,7 @@ describe('createMethodNegotiator', () => {
   test('with empty method', () => {
     const request = { headers: {} } as unknown as ServerRequest;
 
-    const methodNegotiator = createMethodNegotiator([Method.GET, Method.POST]);
+    const methodNegotiator = createMethodNegotiator(['GET', 'POST']);
 
     expect(methodNegotiator.negotiate(request)).toBe(false);
   });
@@ -99,7 +98,7 @@ describe('createMethodNegotiator', () => {
   test('with allowed method', () => {
     const request = { headers: { 'access-control-request-method': ['post'] } } as unknown as ServerRequest;
 
-    const methodNegotiator = createMethodNegotiator([Method.GET, Method.POST]);
+    const methodNegotiator = createMethodNegotiator(['GET', 'POST']);
 
     expect(methodNegotiator.negotiate(request)).toBe(true);
   });
@@ -107,13 +106,13 @@ describe('createMethodNegotiator', () => {
   test('with not allowed method', () => {
     const request = { headers: { 'access-control-request-method': ['put'] } } as unknown as ServerRequest;
 
-    const methodNegotiator = createMethodNegotiator([Method.GET, Method.POST]);
+    const methodNegotiator = createMethodNegotiator(['GET', 'POST']);
 
     expect(methodNegotiator.negotiate(request)).toBe(false);
   });
 
   test('get allowed methods', () => {
-    const allowMethods = [Method.GET, Method.POST];
+    const allowMethods = ['GET', 'POST'];
 
     const methodNegotiator = createMethodNegotiator(allowMethods);
 

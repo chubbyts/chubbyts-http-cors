@@ -1,5 +1,4 @@
 import type { Response, ServerRequest } from '@chubbyts/chubbyts-http-types/dist/message';
-import { Method } from '@chubbyts/chubbyts-http-types/dist/message';
 import { expect, test, vi } from 'vitest';
 import { useFunctionMock } from '@chubbyts/chubbyts-function-mock/dist/function-mock';
 import { useObjectMock } from '@chubbyts/chubbyts-function-mock/dist/object-mock';
@@ -9,7 +8,7 @@ import type { HeadersNegotiator, MethodNegotiator, OriginNegotiator } from '../s
 import { createCorsMiddleware } from '../src/middleware';
 
 test('preflight without origin', async () => {
-  const request = { method: Method.OPTIONS } as ServerRequest;
+  const request = { method: 'OPTIONS' } as ServerRequest;
 
   const end = vi.fn();
 
@@ -43,7 +42,7 @@ test('preflight without origin', async () => {
 });
 
 test('preflight with origin, without method, without headers', async () => {
-  const request = { method: Method.OPTIONS } as ServerRequest;
+  const request = { method: 'OPTIONS' } as ServerRequest;
 
   const end = vi.fn();
 
@@ -89,7 +88,7 @@ test('preflight with origin, without method, without headers', async () => {
 });
 
 test('preflight with origin, with method, with headers, minimal', async () => {
-  const request = { method: Method.OPTIONS } as ServerRequest;
+  const request = { method: 'OPTIONS' } as ServerRequest;
 
   const end = vi.fn();
 
@@ -107,7 +106,7 @@ test('preflight with origin, with method, with headers, minimal', async () => {
 
   const [methodNegotiator, methodNegotiatorMocks] = useObjectMock<MethodNegotiator>([
     { name: 'negotiate', parameters: [request], return: true },
-    { name: 'allowMethods', value: [Method.GET, Method.POST] },
+    { name: 'allowMethods', value: ['GET', 'POST'] },
   ]);
 
   const [headersNegotiator, headersNegotiatorMocks] = useObjectMock<HeadersNegotiator>([
@@ -139,7 +138,7 @@ test('preflight with origin, with method, with headers, minimal', async () => {
 });
 
 test('preflight with origin, with method, with headers, maximal', async () => {
-  const request = { method: Method.OPTIONS } as ServerRequest;
+  const request = { method: 'OPTIONS' } as ServerRequest;
 
   const end = vi.fn();
 
@@ -157,7 +156,7 @@ test('preflight with origin, with method, with headers, maximal', async () => {
 
   const [methodNegotiator, methodNegotiatorMocks] = useObjectMock<MethodNegotiator>([
     { name: 'negotiate', parameters: [request], return: true },
-    { name: 'allowMethods', value: [Method.GET, Method.POST] },
+    { name: 'allowMethods', value: ['GET', 'POST'] },
   ]);
 
   const [headersNegotiator, headersNegotiatorMocks] = useObjectMock<HeadersNegotiator>([
@@ -198,7 +197,7 @@ test('preflight with origin, with method, with headers, maximal', async () => {
 });
 
 test('handle without origin', async () => {
-  const request = { method: Method.POST } as ServerRequest;
+  const request = { method: 'POST' } as ServerRequest;
 
   const response = {} as Response;
 
@@ -236,7 +235,7 @@ test('handle without origin', async () => {
 });
 
 test('handle with origin', async () => {
-  const request = { method: Method.POST } as ServerRequest;
+  const request = { method: 'POST' } as ServerRequest;
 
   const response = {} as Response;
 

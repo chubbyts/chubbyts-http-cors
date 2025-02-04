@@ -1,11 +1,10 @@
 import type { Handler } from '@chubbyts/chubbyts-http-types/dist/handler';
 import type { Response, ServerRequest } from '@chubbyts/chubbyts-http-types/dist/message';
-import { Method } from '@chubbyts/chubbyts-http-types/dist/message';
 import type { Middleware } from '@chubbyts/chubbyts-http-types/dist/middleware';
 import type { ResponseFactory } from '@chubbyts/chubbyts-http-types/dist/message-factory';
 import type { HeadersNegotiator, MethodNegotiator, OriginNegotiator } from './negotiation';
 
-const isPreflight = (request: ServerRequest) => request.method.toUpperCase() === Method.OPTIONS;
+const isPreflight = (request: ServerRequest) => request.method.toUpperCase() === 'OPTIONS';
 
 type ResponseMiddleware = (response: Response) => Response;
 
