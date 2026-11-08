@@ -28,8 +28,8 @@ only.
 ## Requirements
 
  * node: 22
- * [@chubbyts/chubbyts-dic-config-factory][5]: ^1.0.1
- * [@chubbyts/chubbyts-dic-types][3]: ^2.3.1
+ * [@chubbyts/chubbyts-dic-config-factory][5]: ^1.1.0
+ * [@chubbyts/chubbyts-dic-types][3]: ^2.4.0
  * [@chubbyts/chubbyts-http-types][2]: ^4.0.0
 
 ## Installation
@@ -37,7 +37,7 @@ only.
 Through [NPM](https://www.npmjs.com) as [@chubbyts/chubbyts-http-cors][1].
 
 ```ts
-npm i @chubbyts/chubbyts-http-cors@^3.0.0
+npm i @chubbyts/chubbyts-http-cors@^3.1.0
 ```
 
 ## Usage
@@ -91,8 +91,8 @@ gets no cors headers. The `vary: origin` header gets added to every response (un
 The package ships service factories (abstract factories built on [chubbyts-dic-config-factory][5]) for a [chubbyts-dic-config][4] (or any [chubbyts-dic-types][3] compatible) container within `@chubbyts/chubbyts-http-cors/service-factory`, configured through `config.chubbyts.cors`. The implementation of the types gets read from the services `serverRequestHelpers`, `responseFactory` and `responseHelpers`, which have to be registered:
 
 ```ts
-import type { ConfigFactory } from '@chubbyts/chubbyts-dic-config/dist/dic-config';
-import { createContainerByConfigFactory } from '@chubbyts/chubbyts-dic-config/dist/dic-config';
+import type { ConfigFactory } from '@chubbyts/chubbyts-dic-config/dic-config';
+import { createContainerByConfigFactory } from '@chubbyts/chubbyts-dic-config/dic-config';
 import { createResponseFactory } from '@chubbyts/chubbyts-http/message-factory';
 import { createResponseHelpers, createServerRequestHelpers } from '@chubbyts/chubbyts-http/message-helper';
 import type { CorsConfig } from '@chubbyts/chubbyts-http-cors/service-factory';
