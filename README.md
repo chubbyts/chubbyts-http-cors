@@ -37,7 +37,7 @@ only.
 Through [NPM](https://www.npmjs.com) as [@chubbyts/chubbyts-http-cors][1].
 
 ```ts
-npm i @chubbyts/chubbyts-http-cors@^3.1.0
+npm i @chubbyts/chubbyts-http-cors@^3.1.1
 ```
 
 ## Usage
